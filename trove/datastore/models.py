@@ -38,7 +38,15 @@ def persisted_models():
 
 class DBDatastore(dbmodels.DatabaseModelBase):
 
-    _data_fields = ['id', 'name', 'default_version_id']
+    _data_fields = ['id', 'name', 'manager', 'default_version_id']
+
+class DBCapabilities(dbmodels.DatabaseModelBase):
+
+    _data_fields = ['id', 'name', 'description']
+
+class DBDatastoreCapabilities(dbmodels.DatabaseModelBase):
+
+    _data_fields = ['capability_id', 'datastore_id']
 
 
 class DBDatastoreVersion(dbmodels.DatabaseModelBase):
@@ -73,6 +81,39 @@ class Datastore(object):
     @property
     def default_version_id(self):
         return self.db_info.default_version_id
+
+    @property
+    def capabilities(self):
+        self.capabilities = self.db_info.capabilities
+        return Capabilites(capabilities)
+        # Capabilies.load(self.id)
+        # return cls(DBDatastore.find_by(datastore_id=self.id))
+
+
+class Capabilities(object):
+
+    def __init__(self, db_info):
+        self.db_info = db_info
+
+    def __contains__(self, item):
+        return (item in [capability['name'] for capability in self.db_info])
+
+    def __iter__(self):
+        for item in self.db_info:
+            yield item
+
+    @classmethod
+    def load(cls, datastore_id=None):
+        if(datastore_id is None):
+            return cls(DBCapabilities.find_all())
+
+        capabilities = DBCapabilities.find_by_association(
+            DBDatastoreCapabilities,
+            foreign_key="capability_id",
+            datastore_id=datastore_id
+        )
+
+        return cls(capabilities)
 
 
 class Datastores(object):
@@ -164,8 +205,8 @@ class DatastoreVersions(object):
             yield item
 
 
-def get_datastore_version(type=None, version=None):
-    datastore = type or CONF.default_datastore
+def get_datastore_version(datastore_type=None, version=None):
+    datastore = datastore_type or CONF.default_datastore
     if not datastore:
         raise exception.DatastoreDefaultDatastoreNotFound()
     datastore = Datastore.load(datastore)
@@ -185,6 +226,10 @@ def get_datastore_version(type=None, version=None):
 
 def update_datastore(name, default_version):
     db_api.configure_db(CONF)
+    if default_version:
+        version = DatastoreVersion.load(default_version)
+        if not version.active:
+            raise exception.DatastoreVersionInactive(version=version.name)
     try:
         datastore = DBDatastore.find_by(name=name)
         if default_version:
