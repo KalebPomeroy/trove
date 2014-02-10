@@ -570,12 +570,11 @@ class Instance(BuiltInstance):
                 db_info.save()
 
             root_password = None
-            # if datastore.has_configuration("root_on_create")
-            if (
-                not backup_id
-                and "root_on_create" in datastore.capabilities
-            ):
-                root_password = uuidutils.generate_uuid()
+            # if (
+            #     not backup_id
+            #     and "root_on_create" in datastore.capabilities
+            # ):
+            #     root_password = uuidutils.generate_uuid()
 
             task_api.API(context).create_instance(db_info.id, name, flavor,
                                                   image_id, databases, users,

@@ -40,9 +40,11 @@ class DBDatastore(dbmodels.DatabaseModelBase):
 
     _data_fields = ['id', 'name', 'manager', 'default_version_id']
 
+
 class DBCapabilities(dbmodels.DatabaseModelBase):
 
     _data_fields = ['id', 'name', 'description']
+
 
 class DBDatastoreCapabilities(dbmodels.DatabaseModelBase):
 
@@ -205,8 +207,8 @@ class DatastoreVersions(object):
             yield item
 
 
-def get_datastore_version(datastore_type=None, version=None):
-    datastore = datastore_type or CONF.default_datastore
+def get_datastore_version(type=None, version=None):
+    datastore = type or CONF.default_datastore
     if not datastore:
         raise exception.DatastoreDefaultDatastoreNotFound()
     datastore = Datastore.load(datastore)
