@@ -223,6 +223,8 @@ class GuestAgentManagerTest(testtools.TestCase):
         verify(dbaas.MySqlAdmin, never).create_database()
         verify(dbaas.MySqlAdmin, never).create_user()
         verify(dbaas.MySqlApp).secure_root(secure_remote_root=any())
+        verify(dbaas.MySqlAdmin, times=times_report).report_root_enabled(
+            self.context)
 
 
 class RedisGuestAgentManagerTest(testtools.TestCase):
