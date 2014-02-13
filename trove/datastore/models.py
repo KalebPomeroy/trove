@@ -111,7 +111,7 @@ class Datastore(object):
         return self.db_info.default_version_id
 
     def capabilities(self):
-        return Capabilities(self.db_info.capabilities)
+        return Capabilities.load(self.db_info.id)
         # Capabilies.load(self.id)
         # return cls(DBDatastore.find_by(datastore_id=self.id))
 
