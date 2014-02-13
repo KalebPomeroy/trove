@@ -45,8 +45,12 @@ def find_all_by_limit(query_func, model, conditions, limit, marker=None,
 
 
 def find_by_association(cls, association_table, foreign_key, **conditions):
+
     query = _base_query(cls)
-    query.options()
+    query.join(association_table)
+    if conditions:
+        query = query.filter_by(**conditions)
+    return query
 
 
 def find_by(model, **kwargs):

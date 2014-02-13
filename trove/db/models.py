@@ -110,8 +110,6 @@ class DatabaseModelBase(models.ModelBase):
             Then it would load all records in Foo that have foo_id in the
             previous result set.
         """
-        models = association_table.join(cls).get_by(**conditions)
-
 
         return get_db_api().find_by_association(cls, association_table,
             foreign_key, **conditions)
