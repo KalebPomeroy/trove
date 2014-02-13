@@ -26,9 +26,6 @@ from trove.db.sqlalchemy.migrate_repo.schema import Table
 meta = MetaData()
 
 
-datastores = Table('datastores', meta, autoload=True)
-
-
 capabilities = Table(
     'capabilities',
     meta,
@@ -49,6 +46,8 @@ datastore_capabilities = Table(
 
 def upgrade(migrate_engine):
     meta.bind = migrate_engine
+    datastores = Table('datastores', meta, autoload=True)
+
     create_tables([capabilities, datastore_capabilities])
 
 
