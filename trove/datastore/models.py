@@ -57,6 +57,32 @@ class DBDatastoreVersion(dbmodels.DatabaseModelBase):
                     'packages', 'active']
 
 
+class Capabilities(object):
+
+    def __init__(self, db_info):
+        self.db_info = db_info
+
+    def __contains__(self, item):
+        return (item in [capability['name'] for capability in self.db_info])
+
+    def __iter__(self):
+        for item in self.db_info:
+            yield item
+
+    @classmethod
+    def load(cls, datastore_id=None):
+        if(datastore_id is None):
+            return cls(DBCapabilities.find_all())
+
+        capabilities = DBCapabilities.find_by_association(
+            DBDatastoreCapabilities,
+            foreign_key="capability_id",
+            datastore_id=datastore_id
+        )
+
+        return cls(capabilities)
+
+
 class Datastore(object):
 
     def __init__(self, db_info):
@@ -90,30 +116,6 @@ class Datastore(object):
         # return cls(DBDatastore.find_by(datastore_id=self.id))
 
 
-class Capabilities(object):
-
-    def __init__(self, db_info):
-        self.db_info = db_info
-
-    def __contains__(self, item):
-        return (item in [capability['name'] for capability in self.db_info])
-
-    def __iter__(self):
-        for item in self.db_info:
-            yield item
-
-    @classmethod
-    def load(cls, datastore_id=None):
-        if(datastore_id is None):
-            return cls(DBCapabilities.find_all())
-
-        capabilities = DBCapabilities.find_by_association(
-            DBDatastoreCapabilities,
-            foreign_key="capability_id",
-            datastore_id=datastore_id
-        )
-
-        return cls(capabilities)
 
 
 class Datastores(object):
