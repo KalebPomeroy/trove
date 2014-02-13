@@ -26,16 +26,6 @@ from trove.db.sqlalchemy.migrate_repo.schema import Table
 meta = MetaData()
 
 
-# I couldn't get migrations to run without adding the datastores table here
-datastores = Table(
-    'datastores',
-    meta,
-    Column('id', String(36), primary_key=True, nullable=False),
-    Column('name', String(255), unique=True),
-    Column('manager', String(255), nullable=False),
-    Column('default_version_id', String(36)),
-)
-
 capabilities = Table(
     'capabilities',
     meta,

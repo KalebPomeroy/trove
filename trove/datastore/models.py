@@ -228,10 +228,6 @@ def get_datastore_version(type=None, version=None):
 
 def update_datastore(name, default_version):
     db_api.configure_db(CONF)
-    if default_version:
-        version = DatastoreVersion.load(default_version)
-        if not version.active:
-            raise exception.DatastoreVersionInactive(version=version.name)
     try:
         datastore = DBDatastore.find_by(name=name)
         if default_version:
