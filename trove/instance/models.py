@@ -575,10 +575,14 @@ class Instance(BuiltInstance):
                 and "root_on_create" in datastore.capabilities()
             ):
 
+                LOG.info("*"*800)
                 LOG.info("There is indeed a capability for root_on_create" )
+                LOG.info("*"*800)
                 root_password = utils.generate_uuid()
             else:
+                LOG.info("*"*800)
                 LOG.info("No capability for root_on_create")
+                LOG.info("*"*800)
 
             task_api.API(context).create_instance(db_info.id, name, flavor,
                                                   image_id, databases, users,
