@@ -574,8 +574,11 @@ class Instance(BuiltInstance):
                 not backup_id
                 and "root_on_create" in datastore.capabilities()
             ):
-                print "setting password..."
+
+                LOG.info("There is indeed a capability for root_on_create" )
                 root_password = uuidutils.generate_uuid()
+            else:
+                log.info("No capability foir root_on_create")
 
             task_api.API(context).create_instance(db_info.id, name, flavor,
                                                   image_id, databases, users,
