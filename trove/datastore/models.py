@@ -71,7 +71,7 @@ class Capabilities(object):
 
     @classmethod
     def load(cls, datastore_id=None):
-        if(datastore_id is None):
+        if(datastore_id is None or True):
             return cls(DBCapabilities.find_all())
 
         capabilities = DBCapabilities.find_by_association(
