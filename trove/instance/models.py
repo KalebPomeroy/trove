@@ -578,7 +578,7 @@ class Instance(BuiltInstance):
                 LOG.info("There is indeed a capability for root_on_create" )
                 root_password = uuidutils.generate_uuid()
             else:
-                log.info("No capability foir root_on_create")
+                LOG.info("No capability for root_on_create")
 
             task_api.API(context).create_instance(db_info.id, name, flavor,
                                                   image_id, databases, users,
