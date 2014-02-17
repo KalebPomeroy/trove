@@ -99,6 +99,10 @@ class DatastoreNotFound(NotFound):
 
     message = _("Datastore '%(datastore)s' cannot be found.")
 
+class CapabilityNotFound(NotFound):
+
+    message = _("Capability '%(capability)s' cannot be found.")
+
 
 class DatastoreVersionNotFound(NotFound):
 

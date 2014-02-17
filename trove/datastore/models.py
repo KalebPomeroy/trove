@@ -83,6 +83,22 @@ class Capabilities(object):
         # return cls(capabilities)
 
 
+class Capability(object):
+
+    def __init__(self, db_info):
+        self.db_info = db_info
+
+    @classmethod
+    def load(cls, id_or_name):
+        try:
+            return cls(DBCapabilities.find_by(id=id_or_name))
+        except exception.ModelNotFoundError:
+            try:
+                return cls(DBCapabilities.find_by(name=id_or_name))
+            except exception.ModelNotFoundError:
+                raise exception.CapabilityNotFound(capability=id_or_name)
+
+
 class Datastore(object):
 
     def __init__(self, db_info):

@@ -34,6 +34,8 @@ def map(engine, models):
                Table('datastores', meta, autoload=True))
     orm.mapper(models['datastore_version'],
                Table('datastore_versions', meta, autoload=True))
+    orm.mapper(models['capability'],
+               Table('capabilities', meta, autoload=True))
     orm.mapper(models['service_statuses'],
                Table('service_statuses', meta, autoload=True))
     orm.mapper(models['dns_records'],
