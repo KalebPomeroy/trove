@@ -576,7 +576,7 @@ class Instance(BuiltInstance):
             ):
 
                 LOG.info("There is indeed a capability for root_on_create" )
-                root_password = uuidutils.generate_uuid()
+                root_password = utils.generate_uuid()
             else:
                 LOG.info("No capability for root_on_create")
 
