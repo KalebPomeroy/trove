@@ -51,7 +51,7 @@ def find_all_by_limit(query_func, model, conditions, limit, marker=None,
 def find_by_association(table, association_table, foreign_key, **conditions):
 
     query = _base_query(table)
-    LOG.info("JOINING ASSOCIATION TABLE: " + association_table)
+    LOG.info(type(association_table))
     query.join(association_table)
     if conditions:
         query = query.filter_by(**conditions)
