@@ -572,11 +572,12 @@ class Instance(BuiltInstance):
             root_password = None
             if (
                 not backup_id
-                and "root_on_create" in datastore.capabilities()
+                and "root_on_create" in datastore.capabilities
             ):
 
                 LOG.info("*"*800)
                 LOG.info("There is indeed a capability for root_on_create" )
+                LOG.info(datastore.capabilities)
                 LOG.info("*"*800)
                 root_password = utils.generate_uuid()
             else:

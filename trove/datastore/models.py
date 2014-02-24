@@ -64,7 +64,11 @@ class Capabilities(object):
         self.db_info = db_info
 
     def __contains__(self, item):
-        return (item in [capability['name'] for capability in self.db_info])
+
+        LOG.info(">"*800)
+        LOG.info("Checking to see if " + item + "is in capabilities" )
+        LOG.info("<"*800)
+        return item in [capability['name'] for capability in self.db_info]
 
     def __iter__(self):
         for item in self.db_info:
@@ -72,14 +76,19 @@ class Capabilities(object):
 
     @classmethod
     def load(cls, datastore_id=None):
-        if(datastore_id is None or True):
+        if(datastore_id is None):
             return cls(DBCapabilities.find_all())
 
+
+        LOG.info(">"*800)
+        LOG.info("LOADING CAPABILITIES FOR " + datastore_id )
+        LOG.info("<"*800)
         capabilities = DBCapabilities.find_by_association(
             DBDatastoreCapabilities,
             foreign_key="capability_id",
             datastore_id=datastore_id
         )
+
 
         return cls(capabilities)
 
@@ -111,10 +120,9 @@ class Datastore(object):
     def default_version_id(self):
         return self.db_info.default_version_id
 
+    @property
     def capabilities(self):
         return Capabilities.load(self.db_info.id)
-        # Capabilies.load(self.id)
-        # return cls(DBDatastore.find_by(datastore_id=self.id))
 
 
 class Datastores(object):
