@@ -20,6 +20,7 @@ import sqlalchemy.exc
 from trove.common import exception
 from trove.db.sqlalchemy import migration
 from trove.db.sqlalchemy import session
+from trove.openstack.common import log as logging
 
 
 LOG = logging.getLogger(__name__)
