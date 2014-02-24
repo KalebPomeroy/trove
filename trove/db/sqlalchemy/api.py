@@ -22,6 +22,9 @@ from trove.db.sqlalchemy import migration
 from trove.db.sqlalchemy import session
 
 
+LOG = logging.getLogger(__name__)
+
+
 def list(query_func, *args, **kwargs):
     return query_func(*args, **kwargs).all()
 
@@ -47,6 +50,7 @@ def find_all_by_limit(query_func, model, conditions, limit, marker=None,
 def find_by_association(table, association_table, foreign_key, **conditions):
 
     query = _base_query(table)
+    LOG.info("JOINING ASSOCIATION TABLE: " + association_table)
     query.join(association_table)
     if conditions:
         query = query.filter_by(**conditions)
