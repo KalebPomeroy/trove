@@ -84,7 +84,7 @@ class Capabilities(object):
         LOG.info("LOADING CAPABILITIES FOR " + datastore_id )
         LOG.info("<"*800)
         capabilities = DBCapabilities.find_by_association(
-            DBDatastoreCapabilities,
+            "datastore_capabilities",
             foreign_key="capability_id",
             datastore_id=datastore_id
         )
