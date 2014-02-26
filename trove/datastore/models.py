@@ -84,7 +84,7 @@ class Capabilities(object):
         LOG.info("LOADING CAPABILITIES FOR " + datastore_id )
         LOG.info("<"*800)
 
-        self = cls(datastore_id)
+        self = cls()
         capability_mappings = DBDatastoreCapabilities.find_all(datastore_id=datastore_id)
         for capability_id in capability_mappings:
             self.add(Capability.load(capability_id))
