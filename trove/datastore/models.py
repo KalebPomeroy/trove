@@ -60,11 +60,10 @@ class DBDatastoreVersion(dbmodels.DatabaseModelBase):
 
 class Capabilities(object):
 
-    def __init__(self, capabilities):
-        self.capabilities = capabilities
+    def __init__(self):
+        self.capabilities = []
 
     def __contains__(self, item):
-
         LOG.info(">"*800)
         LOG.info("Checking to see if " + item + "is in capabilities" )
         LOG.info("<"*800)
@@ -74,26 +73,24 @@ class Capabilities(object):
         for item in self.capabilities:
             yield item
 
+    def add(self, capability):
+        self.capabilities.append(capability)
+
     @classmethod
     def load(cls, datastore_id=None):
-        # if(datastore_id is None):
-        #     return cls(DBCapabilities.find_all())
 
 
         LOG.info(">"*800)
         LOG.info("LOADING CAPABILITIES FOR " + datastore_id )
         LOG.info("<"*800)
 
+        self = cls(datastore_id)
         capability_mappings = DBDatastoreCapabilities.find_all(datastore_id=datastore_id)
-        list_of_capabilities = []
         for capability_id in capability_mappings:
-            capability = cls(Capability.load(capability_id))
-            list_of_capabilities.append(capability)
+            self.add(Capability.load(capability_id))
 
-        return cls(list_of_capabilities)
+        return self
 
-
-        return cls(capabilities)
 
 class Capability(object):
 
@@ -102,7 +99,19 @@ class Capability(object):
 
     @classmethod
     def load(cls, capability_id):
-        return cls(capability_id)
+        return cls(DBCapabilities.find_by(id=capability_id))
+
+    @property
+    def id(self):
+        return self.db_info.id
+
+    @property
+    def name(self):
+        return self.db_info.name
+
+    @property
+    def description(self):
+        return self.db_info.description
 
 
 class Datastore(object):
