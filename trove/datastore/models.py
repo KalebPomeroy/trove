@@ -83,11 +83,10 @@ class Capabilities(object):
         LOG.info(">"*800)
         LOG.info("LOADING CAPABILITIES FOR " + datastore_id )
         LOG.info("<"*800)
-        capabilities = DBCapabilities.find_by_association(
-            DBDatastoreCapabilities(),
-            foreign_key="capability_id",
-            datastore_id=datastore_id
-        )
+
+        capability_mappings = DBDatastoreCapabilities.find_all(datastore_id=datastore.id)
+        for capability_id in capability_mappings:
+            LOG.info("CAPability id:" + capability_id)
 
 
         return cls(capabilities)
