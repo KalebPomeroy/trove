@@ -60,36 +60,49 @@ class DBDatastoreVersion(dbmodels.DatabaseModelBase):
 
 class Capabilities(object):
 
-    def __init__(self, db_info):
-        self.db_info = db_info
+    def __init__(self, capabilities):
+        self.capabilities = capabilities
 
     def __contains__(self, item):
 
         LOG.info(">"*800)
         LOG.info("Checking to see if " + item + "is in capabilities" )
         LOG.info("<"*800)
-        return item in [capability['name'] for capability in self.db_info]
+        return item in [capability['name'] for capability in self.capabilities]
 
     def __iter__(self):
-        for item in self.db_info:
+        for item in self.capabilities:
             yield item
 
     @classmethod
     def load(cls, datastore_id=None):
-        if(datastore_id is None):
-            return cls(DBCapabilities.find_all())
+        # if(datastore_id is None):
+        #     return cls(DBCapabilities.find_all())
 
 
         LOG.info(">"*800)
         LOG.info("LOADING CAPABILITIES FOR " + datastore_id )
         LOG.info("<"*800)
 
-        capability_mappings = DBDatastoreCapabilities.find_all(datastore_id=datastore.id)
+        capability_mappings = DBDatastoreCapabilities.find_all(datastore_id=datastore_id)
+        list_of_capabilities = []
         for capability_id in capability_mappings:
-            LOG.info("CAPability id:" + capability_id)
+            capability = cls(Capability.load(capability_id))
+            list_of_capabilities.append(capability)
+
+        return cls(list_of_capabilities)
 
 
         return cls(capabilities)
+
+class Capability(object):
+
+    def __init__(self, db_info):
+        self.db_info = db_info
+
+    @classmethod
+    def load(cls, capability_id):
+        return cls(capability_id)
 
 
 class Datastore(object):
