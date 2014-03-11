@@ -80,7 +80,7 @@ class Capabilities(object):
     def load(cls, datastore_id=None):
 
 
-        versions = DBDatastoreVersion.find_all(datastore_id=datastore.id)
+        versions = DBDatastoreVersion.find_all(datastore_id=datastore_id)
         LOG.info(versions.count())
         LOG.info(versions)
         LOG.info(versions.__class__)
