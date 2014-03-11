@@ -93,7 +93,7 @@ class Capabilities(object):
             for capability_map in capability_mappings:
                 LOG.info("LOADING " + capability_map)
                 # self.add(Capability.load(capability_id))
-
+        LOG.info("ALL DONE LOADING...")
         return self
 
 
