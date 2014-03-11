@@ -80,9 +80,14 @@ class Capabilities(object):
     def load(cls, datastore_id=None):
 
 
-        LOG.info(">"*800)
+        versions = DBDatastoreVersion.find_all(datastore_id=datastore.id)
+        LOG.info(versions.count())
+        LOG.info(versions)
+        LOG.info(versions.__class__)
+
+        LOG.info(">"*80)
         LOG.info("LOADING CAPABILITIES FOR " + datastore_id )
-        LOG.info("<"*800)
+        LOG.info("<"*80)
 
         self = cls()
         capability_mappings = DBDatastoreCapabilities.find_by(datastore_id=datastore_id)
