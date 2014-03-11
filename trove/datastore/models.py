@@ -34,6 +34,7 @@ def persisted_models():
         'datastore': DBDatastore,
         'capabilities': DBCapabilities,
         'datastore_version': DBDatastoreVersion,
+        'datastore_capabilities': DBDatastoreCapabilities,
     }
 
 
@@ -80,28 +81,36 @@ class Capabilities(object):
     def load(cls, datastore_id=None):
 
 
+        LOG.info("LISTING MATCHING DATASTORE VERSIONS")
         versions = DBDatastoreVersion.find_all(datastore_id=datastore_id)
-        LOG.info(versions.count())
         LOG.info(versions)
         LOG.info(versions.__class__)
+        LOG.info(versions.count())
 
-        LOG.info(">"*80)
-        LOG.info("LOADING CAPABILITIES FOR " + datastore_id )
-        LOG.info("<"*80)
-
-        self = cls()
-        
+        LOG.info("LISTING MATCHING CAPABILITIES")
         capability_mappings = DBDatastoreCapabilities.find_all(datastore_id=datastore_id)
-        LOG.info("GETTING TO THIS....")
         LOG.info(capability_mappings)
         LOG.info(capability_mappings.__class__)
         LOG.info(capability_mappings.count())
-        if capability_mappings.count() > 0:
-            LOG.info("AND THE COUNT WAS GREATER THAN 0")
-            for capability_map in capability_mappings:
-                LOG.info("LOADING " + capability_map)
-                # self.add(Capability.load(capability_id))
-        LOG.info("ALL DONE LOADING...")
+
+        #
+        # LOG.info(">"*80)
+        # LOG.info("LOADING CAPABILITIES FOR " + datastore_id )
+        # LOG.info("<"*80)
+        #
+        # self = cls()
+        #
+        # capability_mappings = DBDatastoreCapabilities.find_all(datastore_id=datastore_id)
+        # LOG.info("GETTING TO THIS....")
+        # LOG.info(capability_mappings)
+        # LOG.info(capability_mappings.__class__)
+        # LOG.info(capability_mappings.count())
+        # if capability_mappings.count() > 0:
+        #     LOG.info("AND THE COUNT WAS GREATER THAN 0")
+        #     for capability_map in capability_mappings:
+        #         LOG.info("LOADING " + capability_map)
+        #         # self.add(Capability.load(capability_id))
+        # LOG.info("ALL DONE LOADING...")
         return self
 
 
