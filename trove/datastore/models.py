@@ -85,7 +85,7 @@ class Capabilities(object):
         LOG.info("<"*800)
 
         self = cls()
-        capability_mappings = DBDatastoreCapabilities.find_all(datastore_id=datastore_id)
+        capability_mappings = DBDatastoreCapabilities.find_by(datastore_id=datastore_id)
         LOG.info("GETTING TO THIS....")
         LOG.info(capability_mappings)
         LOG.info(capability_mappings.__class__)
