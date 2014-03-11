@@ -87,6 +87,8 @@ class Capabilities(object):
         self = cls()
         capability_mappings = DBDatastoreCapabilities.find_all(datastore_id=datastore_id)
         LOG.info("GETTING TO THIS....")
+        LOG.info(capability_mappings)
+        LOG.info(capability_mappings.__class__)
         LOG.info(capability_mappings.count())
         if capability_mappings.count() > 0:
             LOG.info("AND THE COUNT WAS GREATER THAN 0")
