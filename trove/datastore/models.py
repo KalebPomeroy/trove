@@ -86,9 +86,10 @@ class Capabilities(object):
 
         self = cls()
         capability_mappings = DBDatastoreCapabilities.find_all(datastore_id=datastore_id)
-        # for capability_id in capability_mappings:
-        #     LOG.info("LOADING " + capability_id)
-            # self.add(Capability.load(capability_id))
+        if(capability_mappings.size() > 0)
+            for capability_map in capability_mappings:
+                LOG.info("LOADING " + capability_map)
+                # self.add(Capability.load(capability_id))
 
         return self
 
