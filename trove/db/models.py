@@ -90,29 +90,6 @@ class DatabaseModelBase(models.ModelBase):
         for k, v in values.iteritems():
             self[k] = v
 
-    @classmethod
-    def find_by_association(cls, association_table, foreign_key, **conditions):
-        """
-            Given an association_table, a foreign_key name (from table to
-            association_table), look up all records in association_table that
-            match **conditions
-
-            example:
-                Foo.find_by_association(
-                    association_table=FooBarAssociation,
-                    foreign_key="foo_id",
-                    bar_id="3"
-                )
-
-            This would find all records in the association table that have
-            bar_id of 3.
-
-            Then it would load all records in Foo that have foo_id in the
-            previous result set.
-        """
-
-        return get_db_api().find_by_association(cls, association_table,
-            foreign_key, **conditions)
 
     @classmethod
     def find_by(cls, context=None, **conditions):

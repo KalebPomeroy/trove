@@ -20,10 +20,6 @@ import sqlalchemy.exc
 from trove.common import exception
 from trove.db.sqlalchemy import migration
 from trove.db.sqlalchemy import session
-from trove.openstack.common import log as logging
-
-
-LOG = logging.getLogger(__name__)
 
 
 def list(query_func, *args, **kwargs):
@@ -46,16 +42,6 @@ def find_all_by_limit(query_func, model, conditions, limit, marker=None,
                       marker_column=None):
     return _limits(query_func, model, conditions, limit, marker,
                    marker_column).all()
-
-
-def find_by_association(table, association_table, foreign_key, **conditions):
-
-    query = _base_query(table)
-    LOG.info(association_table.__class__.__name__)
-    query.join(association_table)
-    if conditions:
-        query = query.filter_by(**conditions)
-    return query
 
 
 def find_by(model, **kwargs):
