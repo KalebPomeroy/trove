@@ -91,7 +91,10 @@ class Capability(object):
 
     @classmethod
     def load(cls, capability_id):
-        return cls(DBCapabilities.find_by(id=capability_id))
+        try:
+            return cls(DBCapabilities.find_by(id=capability_id))
+        except exception.ModelNotFoundError:
+            raise exception.CapabilityNotFound(capability=capability_id)
 
     @property
     def id(self):
