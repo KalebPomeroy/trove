@@ -32,7 +32,9 @@ db_api = get_db_api()
 def persisted_models():
     return {
         'datastore': DBDatastore,
+        'capabilities': DBCapabilities,
         'datastore_version': DBDatastoreVersion,
+        'datastore_version_capabilities': DBDatastoreVersionCapabilities,
     }
 
 
@@ -41,10 +43,121 @@ class DBDatastore(dbmodels.DatabaseModelBase):
     _data_fields = ['id', 'name', 'default_version_id']
 
 
+class DBCapabilities(dbmodels.DatabaseModelBase):
+
+    _data_fields = ['id', 'name', 'description']
+
+
+class DBDatastoreVersionCapabilities(dbmodels.DatabaseModelBase):
+
+    _data_fields = ['id', 'capability_id', 'datastore_version_id']
+
+
 class DBDatastoreVersion(dbmodels.DatabaseModelBase):
 
     _data_fields = ['id', 'datastore_id', 'name', 'manager', 'image_id',
                     'packages', 'active']
+
+
+class Capabilities(object):
+
+    def __init__(self, datastore_version_id=None):
+        self.capabilities = []
+        self.datastore_version_id = datastore_version_id
+
+    def __contains__(self, item):
+        return item in [capability.name for capability in self.capabilities]
+
+    def __len__(self):
+        return len(self.capabilities)
+
+    def __iter__(self):
+        for item in self.capabilities:
+            yield item
+
+    def add(self, capability):
+        """
+            This adds a capability to the list. If this capability list has
+            an associated datastore, it also creates the association in the
+            datastore_capabilities table.
+        """
+
+        if not capability.enabled:
+            raise exception.CapabilityDisabled(capability=capability.name)
+
+        if self.datastore_version_id is not None:
+            DBDatastoreVersionCapabilities.create(
+                capability_id=capability.id,
+                datastore_version_id=self.datastore_version_id)
+        self.capabilities.append(capability)
+
+    @classmethod
+    def load(cls, datastore_version_id=None):
+        self = cls(datastore_version_id)
+
+        capability_mappings = DBDatastoreVersionCapabilities.find_all(
+            datastore_version_id=self.datastore_version_id)
+        for capability_map in capability_mappings:
+            capability = Capability.load(capability_map.capability_id)
+            self.capabilities.append(capability)
+
+        return self
+
+
+class Capability(object):
+
+    def __init__(self, db_info):
+        self.db_info = db_info
+
+    @classmethod
+    def load(cls, capability_id_or_name):
+        try:
+            return cls(DBCapabilities.find_by(id=capability_id_or_name))
+        except exception.ModelNotFoundError:
+            try:
+                return cls(DBCapabilities.find_by(name=capability_id_or_name))
+            except exception.ModelNotFoundError:
+                raise exception.CapabilityNotFound(
+                    capability=capability_id_or_name)
+
+    @property
+    def id(self):
+        return self.db_info.id
+
+    @property
+    def name(self):
+        return self.db_info.name
+
+    @property
+    def description(self):
+        return self.db_info.description
+
+    @property
+    def enabled(self):
+        return self.db_info.enabled
+
+    def enable(self):
+        self.db_info.enabled = True
+        self.db_info.save()
+
+    def disable(self):
+        self.db_info.enabled = False
+        self.db_info.save()
+
+    @classmethod
+    def create(cls, name, description, enabled=True):
+        return Capability(DBCapabilities.create(
+            name=name, description=description, enabled=enabled))
+
+    def delete(self):
+
+        # Remove all of the associated rows with the capability when it dies
+        capability_mappings = DBDatastoreVersionCapabilities.find_all(
+            capability_id=self.id)
+        for capability_map in capability_mappings:
+            capability_map.delete()
+
+        self.db_info.delete()
 
 
 class Datastore(object):
@@ -74,6 +187,9 @@ class Datastore(object):
     def default_version_id(self):
         return self.db_info.default_version_id
 
+    def delete(self):
+        self.db_info.delete()
+
 
 class Datastores(object):
 
@@ -96,6 +212,7 @@ class Datastores(object):
 class DatastoreVersion(object):
 
     def __init__(self, db_info):
+        self._capabilities = None
         self.db_info = db_info
 
     @classmethod
@@ -146,6 +263,13 @@ class DatastoreVersion(object):
     @property
     def manager(self):
         return self.db_info.manager
+
+    @property
+    def capabilities(self):
+        if self._capabilities is None:
+            self._capabilities = Capabilities.load(self.db_info.id)
+
+        return self._capabilities
 
 
 class DatastoreVersions(object):
