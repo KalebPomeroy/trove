@@ -37,6 +37,7 @@ capabilities = Table(
 datastore_capabilities = Table(
     'datastore_capabilities',
     meta,
+    Column('id', String(36), primary_key=True, nullable=False),
     Column('datastore_id', String(36), ForeignKey('datastores.id')),
     Column('capability_id', String(36), ForeignKey('capabilities.id')),
     UniqueConstraint('datastore_id', 'capability_id', name='ds_capabilities')
