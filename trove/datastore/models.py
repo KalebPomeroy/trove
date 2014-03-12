@@ -65,10 +65,7 @@ class Capabilities(object):
         self.capabilities = []
 
     def __contains__(self, item):
-        LOG.info(">"*800)
-        LOG.info("Checking to see if " + item + "is in capabilities" )
-        LOG.info("<"*800)
-        return item in [capability['name'] for capability in self.capabilities]
+        return item in [capability.name for capability in self.capabilities]
 
     def __iter__(self):
         for item in self.capabilities:
