@@ -90,7 +90,6 @@ class DatabaseModelBase(models.ModelBase):
         for k, v in values.iteritems():
             self[k] = v
 
-
     @classmethod
     def find_by(cls, context=None, **conditions):
         model = cls.get_by(**conditions)
