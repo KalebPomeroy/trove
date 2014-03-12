@@ -89,8 +89,10 @@ class Capabilities(object):
         capability_mappings = DBDatastoreCapabilities.find_all(datastore_id=datastore_id)
         LOG.info("GETTING TO THIS....")
         for capability_map in capability_mappings:
-            LOG.info("LOADING " + capability_map)
-            # self.add(Capability.load(capability_id))
+            LOG.info(capability_map)
+            LOG.info(capability_map.__class__)
+            LOG.info(capability_map['capability_id'])
+            # self.add(Capability.load(cDBDatastoreCapabilitiesDBDatastoreCapabilitiesapability_id))
         LOG.info("ALL DONE LOADING...")
         return self
 
